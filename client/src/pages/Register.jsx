@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -8,6 +8,7 @@ import axios from 'axios';
 import { registerRoute } from '../utils/ApiRouter';
 
 const Register = () => {
+  const navigate = useNavigate();
   const [values, setValues] = useState({
     username: '',
     email: '',
@@ -30,6 +31,10 @@ const Register = () => {
         email,
         password,
       });
+      if (data.status === true) {
+        localStorage.setItem(`chat-app-user`, JSON.stringify(data.user));
+        navigate('/');
+      } else toast.error(data.messages, toastOptions);
     }
   };
 
@@ -66,7 +71,10 @@ const Register = () => {
           <input type="password" placeholder="Confirm Password" name="confirmPassword" onChange={(e) => handleChange(e)} />
           <button type="submit">Create User</button>
           <span>
-            Already have an account?<Link to="/login">Login</Link>
+            Already have an account?
+            <Link to="/login" style={{ marginLeft: '4px' }}>
+              Login
+            </Link>
           </span>
         </form>
       </FormContainer>
